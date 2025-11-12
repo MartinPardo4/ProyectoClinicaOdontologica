@@ -1,7 +1,8 @@
-package service;
+package com.clinicaOdontologica.MartinPardo.service;
 
-import dao.iDao;
-import model.Odontologo;
+import com.clinicaOdontologica.MartinPardo.dao.iDao;
+import com.clinicaOdontologica.MartinPardo.model.Odontologo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.List;
 public class OdontologoService {
     private iDao<Odontologo> odontologoiDao;
 
+    @Autowired
     public OdontologoService(iDao<Odontologo> odontologoiDao) {
         this.odontologoiDao = odontologoiDao;
     }
@@ -18,11 +20,11 @@ public class OdontologoService {
         return odontologoiDao.guardar(odontologo);
     }
     
-    public Odontologo buscarOdontologoPorId(Integer id){
+    public Odontologo buscarOdontologoPorId(Long id){
         return odontologoiDao.buscar(id);
     }
     
-    public void eliminarOdontologo(Integer id){
+    public void eliminarOdontologo(Long id){
         odontologoiDao.eliminar(id);
     }
     

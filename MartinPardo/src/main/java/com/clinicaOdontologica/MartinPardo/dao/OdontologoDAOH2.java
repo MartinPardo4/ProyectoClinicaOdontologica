@@ -1,6 +1,7 @@
-package dao;
+package com.clinicaOdontologica.MartinPardo.dao;
 
-import model.Odontologo;
+import com.clinicaOdontologica.MartinPardo.model.Odontologo;
+import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -9,6 +10,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+@Repository
 public class OdontologoDAOH2 implements iDao<Odontologo> {
     private static final String SQL_INSERT="INSERT INTO ODONTOLOGOS(NOMBRE, APELLIDO, MATRICULA) VALUES(?,?,?)";
     private static final String SQL_SELECT_ONE="SELECT * FROM ODONTOLOGOS WHERE ID=?";
@@ -30,7 +32,7 @@ public class OdontologoDAOH2 implements iDao<Odontologo> {
             
             ResultSet rs= ps.getGeneratedKeys();
             while(rs.next()){
-                odontologo.setId(rs.getInt(1));
+                odontologo.setId(rs.getLong(1));
             }
             System.out.println("odontologo guardado");
         }catch (Exception e){
@@ -40,16 +42,16 @@ public class OdontologoDAOH2 implements iDao<Odontologo> {
     }
 
     @Override
-    public Odontologo buscar(Integer id) {
+    public Odontologo buscar(Long id) {
         Connection connection= null;
         Odontologo odontologo= null;
         try{
             connection= BD.getConnection();
             PreparedStatement ps_select_one= connection.prepareStatement(SQL_SELECT_ONE);
-            ps_select_one.setInt(1,id);
+            ps_select_one.setLong(1,id);
             ResultSet rs= ps_select_one.executeQuery();
             while(rs.next()){
-                odontologo= new Odontologo(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getString(4));
+                odontologo= new Odontologo(rs.getLong(1),rs.getString(2),rs.getString(3),rs.getString(4));
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -59,12 +61,12 @@ public class OdontologoDAOH2 implements iDao<Odontologo> {
     }
 
     @Override
-    public void eliminar(Integer id) {
+    public void eliminar(Long id) {
         Connection connection= null;
         try{
             connection= BD.getConnection();
             PreparedStatement ps= connection.prepareStatement(SQL_DELETE);
-            ps.setInt(1, id);
+            ps.setLong(1, id);
             ps.executeUpdate();
             System.out.println("odontologo eliminado");
         }catch (Exception e){
@@ -81,7 +83,7 @@ public class OdontologoDAOH2 implements iDao<Odontologo> {
             ps.setString(1, odontologo.getNombre());
             ps.setString(2, odontologo.getApellido());
             ps.setString(3, odontologo.getMatricula());
-            ps.setInt(4, odontologo.getId());
+            ps.setLong(4, odontologo.getId());
             ps.executeUpdate();
             System.out.println("odontologo actualizado");
         }catch (Exception e){
@@ -99,7 +101,7 @@ public class OdontologoDAOH2 implements iDao<Odontologo> {
             ps.setString(1, parametro);
             ResultSet rs= ps.executeQuery();
             while(rs.next()){
-                odontologo= new Odontologo(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getString(4));
+                odontologo= new Odontologo(rs.getLong(1),rs.getString(2),rs.getString(3),rs.getString(4));
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -117,7 +119,7 @@ public class OdontologoDAOH2 implements iDao<Odontologo> {
             PreparedStatement ps= connection.prepareStatement(SQL_SELECT_ALL);
             ResultSet rs= ps.executeQuery();
             while(rs.next()){
-                Odontologo odontologo= new Odontologo(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getString(4));
+                Odontologo odontologo= new Odontologo(rs.getLong(1),rs.getString(2),rs.getString(3),rs.getString(4));
                 odontologos.add(odontologo);
             }
         }catch (Exception e){

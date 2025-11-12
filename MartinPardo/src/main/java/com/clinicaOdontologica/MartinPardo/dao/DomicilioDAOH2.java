@@ -1,6 +1,7 @@
-package dao;
+package com.clinicaOdontologica.MartinPardo.dao;
 
-import model.Domicilio;
+import com.clinicaOdontologica.MartinPardo.model.Domicilio;
+import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -9,6 +10,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+@Repository
 public class DomicilioDAOH2 implements iDao<Domicilio> {
     private static final String SQL_INSERT="INSERT INTO DOMICILIOS(CALLE, NUMERO, LOCALIDAD, PROVINCIA) VALUES(?,?,?,?)";
     private static final String SQL_SELECT_ONE="SELECT * FROM DOMICILIOS WHERE ID=?";
@@ -31,7 +33,7 @@ public class DomicilioDAOH2 implements iDao<Domicilio> {
             
             ResultSet rs= ps.getGeneratedKeys();
             while(rs.next()){
-                domicilio.setId(rs.getInt(1));
+                domicilio.setId(rs.getLong(1));
             }
             System.out.println("domicilio guardado");
         }catch (Exception e){
@@ -41,16 +43,16 @@ public class DomicilioDAOH2 implements iDao<Domicilio> {
     }
 
     @Override
-    public Domicilio buscar(Integer id) {
+    public Domicilio buscar(Long id) {
         Connection connection= null;
         Domicilio domicilio= null;
         try{
             connection= BD.getConnection();
             PreparedStatement ps_select_one= connection.prepareStatement(SQL_SELECT_ONE);
-            ps_select_one.setInt(1,id);
+            ps_select_one.setLong(1,id);
             ResultSet rs= ps_select_one.executeQuery();
             while(rs.next()){
-                domicilio= new Domicilio(rs.getInt(1),rs.getString(2),rs.getInt(3),rs.getString(4),rs.getString(5));
+                domicilio= new Domicilio(rs.getLong(1),rs.getString(2),rs.getInt(3),rs.getString(4),rs.getString(5));
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -60,12 +62,12 @@ public class DomicilioDAOH2 implements iDao<Domicilio> {
     }
 
     @Override
-    public void eliminar(Integer id) {
+    public void eliminar(Long id) {
         Connection connection= null;
         try{
             connection= BD.getConnection();
             PreparedStatement ps= connection.prepareStatement(SQL_DELETE);
-            ps.setInt(1, id);
+            ps.setLong(1, id);
             ps.executeUpdate();
             System.out.println("domicilio eliminado");
         }catch (Exception e){
@@ -83,7 +85,7 @@ public class DomicilioDAOH2 implements iDao<Domicilio> {
             ps.setInt(2, domicilio.getNumero());
             ps.setString(3, domicilio.getLocalidad());
             ps.setString(4, domicilio.getProvincia());
-            ps.setInt(5, domicilio.getId());
+            ps.setLong(5, domicilio.getId());
             ps.executeUpdate();
             System.out.println("domicilio actualizado");
         }catch (Exception e){
@@ -101,7 +103,7 @@ public class DomicilioDAOH2 implements iDao<Domicilio> {
             ps.setString(1, parametro);
             ResultSet rs= ps.executeQuery();
             while(rs.next()){
-                domicilio= new Domicilio(rs.getInt(1),rs.getString(2),rs.getInt(3),rs.getString(4),rs.getString(5));
+                domicilio= new Domicilio(rs.getLong(1),rs.getString(2),rs.getInt(3),rs.getString(4),rs.getString(5));
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -119,7 +121,7 @@ public class DomicilioDAOH2 implements iDao<Domicilio> {
             PreparedStatement ps= connection.prepareStatement(SQL_SELECT_ALL);
             ResultSet rs= ps.executeQuery();
             while(rs.next()){
-                Domicilio domicilio= new Domicilio(rs.getInt(1),rs.getString(2),rs.getInt(3),rs.getString(4),rs.getString(5));
+                Domicilio domicilio= new Domicilio(rs.getLong(1),rs.getString(2),rs.getInt(3),rs.getString(4),rs.getString(5));
                 domicilios.add(domicilio);
             }
         }catch (Exception e){

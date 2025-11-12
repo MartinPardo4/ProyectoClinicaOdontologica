@@ -1,7 +1,8 @@
-package dao;
+package com.clinicaOdontologica.MartinPardo.dao;
 
-import model.Domicilio;
-import model.Paciente;
+import com.clinicaOdontologica.MartinPardo.model.Domicilio;
+import com.clinicaOdontologica.MartinPardo.model.Paciente;
+import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -11,6 +12,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+@Repository
 public class PacienteDAOH2 implements iDao<Paciente>{
     private static final String SQL_INSERT="INSERT INTO PACIENTES(NOMBRE, APELLIDO, NUMEROCONTACTO, FECHAINGRESO, DOMICILIO_ID, EMAIL) VALUES(?,?,?,?,?,?)";
     private static final String SQL_SELECT_ONE="SELECT * FROM PACIENTES WHERE ID=?";
@@ -33,13 +35,13 @@ public class PacienteDAOH2 implements iDao<Paciente>{
             ps.setString(2, paciente.getApellido());
             ps.setInt(3, paciente.getNumeroContacto());
             ps.setDate(4, Date.valueOf(paciente.getFechaIngreso()));
-            ps.setInt(5, domicilio.getId());
+            ps.setLong(5, domicilio.getId());
             ps.setString(6, paciente.getEmail());
             ps.executeUpdate();
             
             ResultSet rs= ps.getGeneratedKeys();
             while(rs.next()){
-                paciente.setId(rs.getInt(1));
+                paciente.setId(rs.getLong(1));
             }
             System.out.println("paciente guardado");
         }catch (Exception e){
@@ -49,19 +51,19 @@ public class PacienteDAOH2 implements iDao<Paciente>{
     }
 
     @Override
-    public Paciente buscar(Integer id) {
+    public Paciente buscar(Long id) {
         Connection connection=null;
         Paciente paciente= null;
         Domicilio domicilio= null;
         try{
             connection=BD.getConnection();
             PreparedStatement ps_select_one= connection.prepareStatement(SQL_SELECT_ONE);
-            ps_select_one.setInt(1,id);
+            ps_select_one.setLong(1,id);
             ResultSet rs= ps_select_one.executeQuery();
             DomicilioDAOH2 daoAux= new DomicilioDAOH2();
             while(rs.next()){
-                domicilio=daoAux.buscar(rs.getInt(6));
-                paciente= new Paciente(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getInt(4),rs.getDate(5).toLocalDate(),domicilio,rs.getString(7));
+                domicilio=daoAux.buscar(rs.getLong(6));
+                paciente= new Paciente(rs.getLong(1),rs.getString(2),rs.getString(3),rs.getInt(4),rs.getDate(5).toLocalDate(),domicilio,rs.getString(7));
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -71,12 +73,12 @@ public class PacienteDAOH2 implements iDao<Paciente>{
     }
 
     @Override
-    public void eliminar(Integer id) {
+    public void eliminar(Long id) {
         Connection connection= null;
         try{
             connection= BD.getConnection();
             PreparedStatement ps= connection.prepareStatement(SQL_DELETE);
-            ps.setInt(1, id);
+            ps.setLong(1, id);
             ps.executeUpdate();
             System.out.println("paciente eliminado");
         }catch (Exception e){
@@ -97,9 +99,9 @@ public class PacienteDAOH2 implements iDao<Paciente>{
             ps.setString(2, paciente.getApellido());
             ps.setInt(3, paciente.getNumeroContacto());
             ps.setDate(4, Date.valueOf(paciente.getFechaIngreso()));
-            ps.setInt(5, paciente.getDomicilio().getId());
+            ps.setLong(5, paciente.getDomicilio().getId());
             ps.setString(6, paciente.getEmail());
-            ps.setInt(7, paciente.getId());
+            ps.setLong(7, paciente.getId());
             ps.executeUpdate();
             System.out.println("paciente actualizado");
         }catch (Exception e){
@@ -119,8 +121,8 @@ public class PacienteDAOH2 implements iDao<Paciente>{
             ResultSet rs= ps.executeQuery();
             DomicilioDAOH2 daoAux= new DomicilioDAOH2();
             while(rs.next()){
-                domicilio=daoAux.buscar(rs.getInt(6));
-                paciente= new Paciente(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getInt(4),rs.getDate(5).toLocalDate(),domicilio,rs.getString(7));
+                domicilio=daoAux.buscar(rs.getLong(6));
+                paciente= new Paciente(rs.getLong(1),rs.getString(2),rs.getString(3),rs.getInt(4),rs.getDate(5).toLocalDate(),domicilio,rs.getString(7));
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -139,8 +141,8 @@ public class PacienteDAOH2 implements iDao<Paciente>{
             ResultSet rs= ps.executeQuery();
             DomicilioDAOH2 daoAux= new DomicilioDAOH2();
             while(rs.next()){
-                Domicilio domicilio=daoAux.buscar(rs.getInt(6));
-                Paciente paciente= new Paciente(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getInt(4),rs.getDate(5).toLocalDate(),domicilio,rs.getString(7));
+                Domicilio domicilio=daoAux.buscar(rs.getLong(6));
+                Paciente paciente= new Paciente(rs.getLong(1),rs.getString(2),rs.getString(3),rs.getInt(4),rs.getDate(5).toLocalDate(),domicilio,rs.getString(7));
                 pacientes.add(paciente);
             }
         }catch (Exception e){

@@ -1,0 +1,270 @@
+{
+  "info": {
+    "name": "Clínica Odontológica",
+    "_postman_id": "4c7c947f-7d62-4b4f-9d92-7f83c7a1e6b0",
+    "description": "Colección CRUD para pacientes y odontólogos.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Pacientes",
+      "item": [
+        {
+          "name": "Listar pacientes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/pacientes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pacientes"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear paciente",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Juan\",\n  \"apellido\": \"Pérez\",\n  \"email\": \"juan.perez@example.com\",\n  \"numeroContacto\": 1122334455,\n  \"fechaIngreso\": \"2025-11-12\",\n  \"domicilio\": {\n    \"calle\": \"Av. Siempre Viva\",\n    \"numero\": 742,\n    \"localidad\": \"Springfield\",\n    \"provincia\": \"Buenos Aires\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/pacientes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pacientes"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar paciente por ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/pacientes/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pacientes",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar paciente por email",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/pacientes/email/juan.perez@example.com",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pacientes",
+                "email",
+                "juan.perez@example.com"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar paciente",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Juan\",\n  \"apellido\": \"Pérez\",\n  \"email\": \"juan.perez@example.com\",\n  \"numeroContacto\": 1199887766,\n  \"fechaIngreso\": \"2025-11-12\",\n  \"domicilio\": {\n    \"id\": 1,\n    \"calle\": \"Av. Siempre Viva\",\n    \"numero\": 742,\n    \"localidad\": \"Springfield\",\n    \"provincia\": \"Buenos Aires\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/pacientes/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pacientes",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar paciente",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/pacientes/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pacientes",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Odontólogos",
+      "item": [
+        {
+          "name": "Listar odontólogos",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/odontologos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "odontologos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear odontólogo",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Ana\",\n  \"apellido\": \"Gómez\",\n  \"matricula\": \"ABC123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/odontologos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "odontologos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar odontólogo por ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/odontologos/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "odontologos",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar odontólogo por matrícula",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/odontologos/matricula/ABC123",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "odontologos",
+                "matricula",
+                "ABC123"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar odontólogo",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Ana\",\n  \"apellido\": \"Gómez\",\n  \"matricula\": \"ABC124\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/odontologos/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "odontologos",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar odontólogo",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/odontologos/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "odontologos",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    }
+  ]
+}

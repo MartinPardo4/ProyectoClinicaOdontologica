@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Gestión de Pacientes y Odontólogos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <style>
+        body {
+            background: linear-gradient(180deg, #f8f9ff 0%, #ffffff 100%);
+        }
+        .navbar-brand span {
+            font-weight: 600;
+            color: #4c63d9;
+        }
+        .card {
+            border: none;
+            border-radius: 12px;
+        }
+        .card-header {
+            border-bottom: none;
+        }
+        .table > :not(caption) > * > * {
+            vertical-align: middle;
+        }
+        .badge-soft {
+            background-color: rgba(76, 99, 217, 0.1);
+            color: #4c63d9;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg bg-white shadow-sm">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center" href="index.html">
+            <span>Clínica Odontológica</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="index.html">Inicio</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="pacienteLista.html#pacientes-pane">Pacientes</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="pacienteLista.html#odontologos-pane">Odontólogos</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<main class="container py-5">
+    <header class="text-center mb-5">
+        <span class="badge badge-soft px-3 py-2 mb-2">Panel administrativo</span>
+        <h1 class="fw-semibold">Gestión de pacientes y odontólogos</h1>
+        <p class="text-muted mb-0">Consulta, registra, actualiza y elimina registros de manera ágil desde un único lugar.</p>
+    </header>
+
+    <ul class="nav nav-pills justify-content-center gap-3 mb-4" id="managementTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="pacientes-tab" data-bs-toggle="pill" data-bs-target="#pacientes-pane" type="button" role="tab" aria-controls="pacientes-pane" aria-selected="true">
+                Pacientes
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="odontologos-tab" data-bs-toggle="pill" data-bs-target="#odontologos-pane" type="button" role="tab" aria-controls="odontologos-pane" aria-selected="false">
+                Odontólogos
+            </button>
+        </li>
+    </ul>
+
+    <div class="tab-content">
+        <!-- Pacientes -->
+        <section class="tab-pane fade show active" id="pacientes-pane" role="tabpanel" aria-labelledby="pacientes-tab">
+            <div class="row g-4">
+                <div class="col-lg-8">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-header bg-white d-flex flex-column flex-md-row align-items-md-center justify-content-between">
+                            <div>
+                                <h5 class="mb-0">Pacientes registrados</h5>
+                                <small class="text-muted">Consulta y administra los pacientes existentes.</small>
+                            </div>
+                            <div class="mt-3 mt-md-0 d-flex gap-2">
+                                <div class="input-group input-group-sm">
+                                    <input type="email" class="form-control" id="pacienteSearchEmail" placeholder="Buscar por correo">
+                                    <button class="btn btn-outline-secondary" id="pacienteSearchBtn">Buscar</button>
+                                </div>
+                                <button class="btn btn-outline-primary btn-sm" id="pacientesReloadBtn">Recargar</button>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table align-middle mb-0">
+                                <thead class="table-light">
+                                <tr>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">Nombre</th>
+                                    <th scope="col">Apellido</th>
+                                    <th scope="col">Email</th>
+                                    <th scope="col">Contacto</th>
+                                    <th scope="col">Ingreso</th>
+                                    <th scope="col" class="text-end">Acciones</th>
+                                </tr>
+                                </thead>
+                                <tbody id="pacienteTableBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-header bg-white">
+                            <h5 class="mb-0" id="pacienteFormTitle">Nuevo paciente</h5>
+                            <small class="text-muted">Completa los datos para registrar o editar.</small>
+                        </div>
+                        <div class="card-body">
+                            <form id="pacienteForm" class="needs-validation" novalidate>
+                                <input type="hidden" name="id">
+                                <input type="hidden" name="domicilioId">
+
+                                <div class="row g-2">
+                                    <div class="col-12 col-md-6">
+                                        <label class="form-label">Nombre</label>
+                                        <input type="text" class="form-control" name="nombre" placeholder="Juan" required>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <label class="form-label">Apellido</label>
+                                        <input type="text" class="form-control" name="apellido" placeholder="Pérez" required>
+                                    </div>
+                                </div>
+
+                                <div class="mt-3">
+                                    <label class="form-label">Correo electrónico</label>
+                                    <input type="email" class="form-control" name="email" placeholder="juan@correo.com" required>
+                                </div>
+
+                                <div class="row g-2 mt-3">
+                                    <div class="col-12 col-md-6">
+                                        <label class="form-label">Contacto</label>
+                                        <input type="number" class="form-control" name="numeroContacto" placeholder="1122334455">
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <label class="form-label">Fecha de ingreso</label>
+                                        <input type="date" class="form-control" name="fechaIngreso" required>
+                                    </div>
+                                </div>
+
+                                <div class="mt-4">
+                                    <h6 class="fw-semibold mb-2">Domicilio</h6>
+                                    <div class="mb-2">
+                                        <label class="form-label">Calle</label>
+                                        <input type="text" class="form-control" name="domicilioCalle" placeholder="Av. Siempre Viva" required>
+                                    </div>
+                                    <div class="row g-2">
+                                        <div class="col-12 col-md-4">
+                                            <label class="form-label">Número</label>
+                                            <input type="number" class="form-control" name="domicilioNumero" placeholder="742">
+                                        </div>
+                                        <div class="col-12 col-md-4">
+                                            <label class="form-label">Localidad</label>
+                                            <input type="text" class="form-control" name="domicilioLocalidad" placeholder="Springfield" required>
+                                        </div>
+                                        <div class="col-12 col-md-4">
+                                            <label class="form-label">Provincia</label>
+                                            <input type="text" class="form-control" name="domicilioProvincia" placeholder="Buenos Aires" required>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex gap-2 mt-4">
+                                    <button type="submit" class="btn btn-primary flex-grow-1" id="pacienteSubmitBtn">Guardar paciente</button>
+                                    <button type="button" class="btn btn-outline-secondary d-none" id="pacienteCancelEdit">Cancelar</button>
+                                </div>
+                            </form>
+                            <div id="pacienteAlert" class="mt-3"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Odontólogos -->
+        <section class="tab-pane fade" id="odontologos-pane" role="tabpanel" aria-labelledby="odontologos-tab">
+            <div class="row g-4">
+                <div class="col-lg-8">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-header bg-white d-flex flex-column flex-md-row align-items-md-center justify-content-between">
+                            <div>
+                                <h5 class="mb-0">Odontólogos registrados</h5>
+                                <small class="text-muted">Gestiona rápidamente el staff profesional.</small>
+                            </div>
+                            <div class="mt-3 mt-md-0 d-flex gap-2">
+                                <div class="input-group input-group-sm">
+                                    <input type="text" class="form-control" id="odontologoSearchMatricula" placeholder="Buscar por matrícula">
+                                    <button class="btn btn-outline-secondary" id="odontologoSearchBtn">Buscar</button>
+                                </div>
+                                <button class="btn btn-outline-primary btn-sm" id="odontologosReloadBtn">Recargar</button>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table align-middle mb-0">
+                                <thead class="table-light">
+                                <tr>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">Nombre</th>
+                                    <th scope="col">Apellido</th>
+                                    <th scope="col">Matrícula</th>
+                                    <th scope="col" class="text-end">Acciones</th>
+                                </tr>
+                                </thead>
+                                <tbody id="odontologoTableBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-header bg-white">
+                            <h5 class="mb-0" id="odontologoFormTitle">Nuevo odontólogo</h5>
+                            <small class="text-muted">Ingresá la información para registrar o actualizar.</small>
+                        </div>
+                        <div class="card-body">
+                            <form id="odontologoForm" class="needs-validation" novalidate>
+                                <input type="hidden" name="id">
+
+                                <div class="mb-3">
+                                    <label class="form-label">Nombre</label>
+                                    <input type="text" class="form-control" name="nombre" placeholder="Ana" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Apellido</label>
+                                    <input type="text" class="form-control" name="apellido" placeholder="Gómez" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Matrícula</label>
+                                    <input type="text" class="form-control" name="matricula" placeholder="ABC123" required>
+                                </div>
+
+                                <div class="d-flex gap-2">
+                                    <button type="submit" class="btn btn-primary flex-grow-1" id="odontologoSubmitBtn">Guardar odontólogo</button>
+                                    <button type="button" class="btn btn-outline-secondary d-none" id="odontologoCancelEdit">Cancelar</button>
+                                </div>
+                            </form>
+                            <div id="odontologoAlert" class="mt-3"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+<script src="/js/get_paciente.js" type="text/javascript"></script>
+</body>
+</html>

@@ -5,25 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="553b8f5c-f5e1-4e11-a3b6-ea9c66f98039" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dao/BD.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dao/DomicilioDAOH2.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dao/OdontologoDAOH2.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dao/PacienteDAOH2.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dao/iDao.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/model/Domicilio.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/model/Odontologo.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/model/Paciente.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/service/DomicilioService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/service/OdontologoService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/service/PacienteService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/DomicilioTestService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/OdontologoTestService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/PacienteTestService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MartinPardo/src/main/java/dao/BD.java" beforeDir="false" afterPath="$PROJECT_DIR$/../MartinPardo/src/main/java/com/clinicaOdontologica/MartinPardo/dao/BD.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MartinPardo/src/main/java/dao/DomicilioDAOH2.java" beforeDir="false" afterPath="$PROJECT_DIR$/../MartinPardo/src/main/java/com/clinicaOdontologica/MartinPardo/dao/DomicilioDAOH2.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MartinPardo/src/main/java/dao/OdontologoDAOH2.java" beforeDir="false" afterPath="$PROJECT_DIR$/../MartinPardo/src/main/java/com/clinicaOdontologica/MartinPardo/dao/OdontologoDAOH2.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MartinPardo/src/main/java/dao/PacienteDAOH2.java" beforeDir="false" afterPath="$PROJECT_DIR$/../MartinPardo/src/main/java/com/clinicaOdontologica/MartinPardo/dao/PacienteDAOH2.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MartinPardo/src/main/java/dao/iDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/../MartinPardo/src/main/java/com/clinicaOdontologica/MartinPardo/dao/iDao.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MartinPardo/src/main/java/model/Domicilio.java" beforeDir="false" afterPath="$PROJECT_DIR$/../MartinPardo/src/main/java/com/clinicaOdontologica/MartinPardo/model/Domicilio.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MartinPardo/src/main/java/model/Odontologo.java" beforeDir="false" afterPath="$PROJECT_DIR$/../MartinPardo/src/main/java/com/clinicaOdontologica/MartinPardo/model/Odontologo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MartinPardo/src/main/java/model/Paciente.java" beforeDir="false" afterPath="$PROJECT_DIR$/../MartinPardo/src/main/java/com/clinicaOdontologica/MartinPardo/model/Paciente.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MartinPardo/src/main/java/service/DomicilioService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../MartinPardo/src/main/java/com/clinicaOdontologica/MartinPardo/service/DomicilioService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MartinPardo/src/main/java/service/OdontologoService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../MartinPardo/src/main/java/com/clinicaOdontologica/MartinPardo/service/OdontologoService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MartinPardo/src/main/java/service/PacienteService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../MartinPardo/src/main/java/com/clinicaOdontologica/MartinPardo/service/PacienteService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

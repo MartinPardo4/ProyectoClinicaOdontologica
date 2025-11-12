@@ -1,7 +1,8 @@
-package service;
+package com.clinicaOdontologica.MartinPardo.service;
 
-import dao.iDao;
-import model.Domicilio;
+import com.clinicaOdontologica.MartinPardo.dao.iDao;
+import com.clinicaOdontologica.MartinPardo.model.Domicilio;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.List;
 public class DomicilioService {
     private iDao<Domicilio> domicilioiDao;
 
+    @Autowired
     public DomicilioService(iDao<Domicilio> domicilioiDao) {
         this.domicilioiDao = domicilioiDao;
     }
@@ -18,11 +20,11 @@ public class DomicilioService {
         return domicilioiDao.guardar(domicilio);
     }
     
-    public Domicilio buscarDomicilioPorId(Integer id){
+    public Domicilio buscarDomicilioPorId(Long id){
         return domicilioiDao.buscar(id);
     }
     
-    public void eliminarDomicilio(Integer id){
+    public void eliminarDomicilio(Long id){
         domicilioiDao.eliminar(id);
     }
     

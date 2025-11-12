@@ -1,7 +1,8 @@
-package service;
+package com.clinicaOdontologica.MartinPardo.service;
 
-import dao.iDao;
-import model.Paciente;
+import com.clinicaOdontologica.MartinPardo.dao.iDao;
+import com.clinicaOdontologica.MartinPardo.model.Paciente;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.List;
 public class PacienteService {
     private iDao<Paciente> pacienteiDao;
 
+    @Autowired
     public PacienteService(iDao<Paciente> pacienteiDao) {
         this.pacienteiDao = pacienteiDao;
     }
@@ -17,11 +19,11 @@ public class PacienteService {
         return pacienteiDao.guardar(paciente);
     }
     
-    public Paciente buscarPacientePorId(Integer id){
+    public Paciente buscarPacientePorId(Long id){
         return pacienteiDao.buscar(id);
     }
     
-    public void eliminarPaciente(Integer id){
+    public void eliminarPaciente(Long id){
         pacienteiDao.eliminar(id);
     }
     
