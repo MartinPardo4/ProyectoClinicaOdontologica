@@ -2,9 +2,11 @@ package service;
 
 import dao.iDao;
 import model.Domicilio;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class DomicilioService {
     private iDao<Domicilio> domicilioiDao;
 

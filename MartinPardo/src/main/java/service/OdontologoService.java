@@ -2,9 +2,11 @@ package service;
 
 import dao.iDao;
 import model.Odontologo;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class OdontologoService {
     private iDao<Odontologo> odontologoiDao;
 

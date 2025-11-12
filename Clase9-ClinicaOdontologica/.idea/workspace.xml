@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="553b8f5c-f5e1-4e11-a3b6-ea9c66f98039" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dao/BD.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dao/DomicilioDAOH2.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dao/OdontologoDAOH2.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dao/PacienteDAOH2.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dao/iDao.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/model/Domicilio.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/model/Odontologo.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/model/Paciente.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/service/DomicilioService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/service/OdontologoService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/service/PacienteService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/DomicilioTestService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/OdontologoTestService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/PacienteTestService.java" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 0
+}</component>
+  <component name="ProjectId" id="33qfug2QLeGpLXCCJP5L8ovEH0q" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "JUnit.DomicilioTestService.actualizarDomicilio.executor": "Debug",
+    "JUnit.DomicilioTestService.buscarDomicilioPorCalle.executor": "Run",
+    "JUnit.DomicilioTestService.buscarDomicilioPorId.executor": "Run",
+    "JUnit.DomicilioTestService.buscarTodosDomicilios.executor": "Run",
+    "JUnit.DomicilioTestService.eliminarDomicilio.executor": "Run",
+    "JUnit.DomicilioTestService.executor": "Run",
+    "JUnit.DomicilioTestService.guardarDomicilio.executor": "Run",
+    "JUnit.PacienteTestService.actualizarPaciente.executor": "Run",
+    "JUnit.PacienteTestService.buscarPacientePorEmail.executor": "Run",
+    "JUnit.PacienteTestService.buscarPacientePorId.executor": "Run",
+    "JUnit.PacienteTestService.buscarTodosPacientes.executor": "Run",
+    "JUnit.PacienteTestService.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/Users/martinpardo/Documents/Repositorios_Git/proyecto_clinica_odontologica/Clase9-ClinicaOdontologica",
+    "project.structure.last.edited": "Libraries",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2"
+  }
+}]]></component>
+  <component name="RunManager" selected="JUnit.OdontologoTestService.eliminarOdontologo">
+    <configuration name="OdontologoTestService.actualizarOdontologo" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Clase9-ClinicaOdontologica" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="MAIN_CLASS_NAME" value="OdontologoTestService" />
+      <option name="METHOD_NAME" value="actualizarOdontologo" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="OdontologoTestService.buscarOdontologoPorId" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Clase9-ClinicaOdontologica" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="MAIN_CLASS_NAME" value="OdontologoTestService" />
+      <option name="METHOD_NAME" value="buscarOdontologoPorId" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="OdontologoTestService.buscarOdontologoPorMatricula" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Clase9-ClinicaOdontologica" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="MAIN_CLASS_NAME" value="OdontologoTestService" />
+      <option name="METHOD_NAME" value="buscarOdontologoPorMatricula" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="OdontologoTestService.buscarTodosOdontologos" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Clase9-ClinicaOdontologica" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="MAIN_CLASS_NAME" value="OdontologoTestService" />
+      <option name="METHOD_NAME" value="buscarTodosOdontologos" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="OdontologoTestService.eliminarOdontologo" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Clase9-ClinicaOdontologica" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="MAIN_CLASS_NAME" value="OdontologoTestService" />
+      <option name="METHOD_NAME" value="eliminarOdontologo" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JUnit.OdontologoTestService.eliminarOdontologo" />
+        <item itemvalue="JUnit.OdontologoTestService.actualizarOdontologo" />
+        <item itemvalue="JUnit.OdontologoTestService.buscarTodosOdontologos" />
+        <item itemvalue="JUnit.OdontologoTestService.buscarOdontologoPorMatricula" />
+        <item itemvalue="JUnit.OdontologoTestService.buscarOdontologoPorId" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="553b8f5c-f5e1-4e11-a3b6-ea9c66f98039" name="Changes" comment="" />
+      <created>1760049749807</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1760049749807</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/src/test/java/PacienteTestService.java</url>
+          <line>48</line>
+          <properties class="PacienteTestService" method="buscarPacientePorEmail">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>
