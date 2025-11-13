@@ -2,10 +2,12 @@ package com.clinicaOdontologica.MartinPardo.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "domicilio")
 public class Domicilio {

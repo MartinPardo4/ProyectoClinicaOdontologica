@@ -2,10 +2,12 @@ package com.clinicaOdontologica.MartinPardo.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "odontologo")
 public class Odontologo {
@@ -16,7 +18,7 @@ public class Odontologo {
     private String nombre;
     @Column
     private String apellido;
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String matricula;
 
     public Odontologo(Long id, String nombre, String apellido, String matricula) {

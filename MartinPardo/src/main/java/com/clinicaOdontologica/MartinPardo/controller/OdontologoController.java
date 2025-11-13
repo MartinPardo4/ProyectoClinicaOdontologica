@@ -16,6 +16,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/odontologos")
@@ -40,11 +41,9 @@ public class OdontologoController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Odontologo> buscarPorId(@PathVariable Long id) {
-        Odontologo odontologo = odontologoService.buscarOdontologoPorId(id);
-        if (odontologo == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(odontologo);
+        Optional<Odontologo> odontologo = odontologoService.buscarOdontologoPorId(id);
+        return odontologo.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping
@@ -54,33 +53,23 @@ public class OdontologoController {
 
     @GetMapping("/matricula/{matricula}")
     public ResponseEntity<Odontologo> buscarPorMatricula(@PathVariable String matricula) {
-        Odontologo odontologo = odontologoService.buscarOdontologoPorMatricula(matricula);
-        if (odontologo == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(odontologo);
+        return odontologoService.buscarOdontologoPorMatricula(matricula)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Odontologo> actualizarOdontologo(@PathVariable Long id, @RequestBody Odontologo odontologo) {
-        Odontologo existente = odontologoService.buscarOdontologoPorId(id);
-        if (existente == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        odontologo.setId(id);
-        odontologoService.actualizarOdontologo(odontologo);
-        Odontologo actualizado = odontologoService.buscarOdontologoPorId(id);
-        return ResponseEntity.ok(actualizado);
+        return odontologoService.actualizarOdontologo(id, odontologo)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminarOdontologo(@PathVariable Long id) {
-        Odontologo existente = odontologoService.buscarOdontologoPorId(id);
-        if (existente == null) {
+        if (!odontologoService.eliminarOdontologo(id)) {
             return ResponseEntity.notFound().build();
         }
-        odontologoService.eliminarOdontologo(id);
         return ResponseEntity.noContent().build();
     }
 }
