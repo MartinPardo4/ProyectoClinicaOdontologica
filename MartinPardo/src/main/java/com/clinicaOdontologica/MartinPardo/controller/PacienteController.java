@@ -30,7 +30,11 @@ public class PacienteController {
     }
 
     @PostMapping
-    public ResponseEntity<Paciente> crearPaciente(@RequestBody Paciente paciente) {
+    public ResponseEntity<?> crearPaciente(@RequestBody Paciente paciente) {
+        if (paciente.getEmail() != null && pacienteService.buscarPacientePorEmail(paciente.getEmail()).isPresent()) {
+            return ResponseEntity.badRequest().body("Ya existe un paciente registrado con el email proporcionado.");
+        }
+
         Paciente pacienteGuardado = pacienteService.guardarPaciente(paciente);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")

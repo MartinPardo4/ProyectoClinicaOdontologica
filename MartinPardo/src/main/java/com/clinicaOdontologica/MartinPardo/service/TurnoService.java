@@ -8,6 +8,7 @@ import com.clinicaOdontologica.MartinPardo.repository.TurnoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -60,6 +61,10 @@ public class TurnoService {
         }
         turnoRepository.deleteById(id);
         return true;
+    }
+
+    public boolean existeTurno(LocalDate fecha, Long pacienteId, Long odontologoId) {
+        return turnoRepository.existsByPacienteIdAndOdontologoIdAndFecha(pacienteId, odontologoId, fecha);
     }
 
     private TurnoDTO mapearADTO(Turno turno) {

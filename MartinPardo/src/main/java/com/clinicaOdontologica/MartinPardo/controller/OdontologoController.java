@@ -30,7 +30,11 @@ public class OdontologoController {
     }
 
     @PostMapping
-    public ResponseEntity<Odontologo> crearOdontologo(@RequestBody Odontologo odontologo) {
+    public ResponseEntity<?> crearOdontologo(@RequestBody Odontologo odontologo) {
+        if (odontologo.getMatricula() != null && odontologoService.buscarOdontologoPorMatricula(odontologo.getMatricula()).isPresent()) {
+            return ResponseEntity.badRequest().body("Ya existe un odontólogo registrado con la matrícula proporcionada.");
+        }
+
         Odontologo odontologoGuardado = odontologoService.guardarOdontologo(odontologo);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")

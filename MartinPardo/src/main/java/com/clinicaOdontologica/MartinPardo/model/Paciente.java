@@ -20,7 +20,7 @@ public class Paciente {
     private String  nombre;
     @Column
     private String apellido;
-    @Column(unique = true)
+    @Column
     private Integer numeroContacto;
     @Column
     private LocalDate fechaIngreso;

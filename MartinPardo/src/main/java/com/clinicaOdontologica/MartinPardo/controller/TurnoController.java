@@ -59,6 +59,10 @@ public class TurnoController {
                     .body("Odontólogo no encontrado: " + turnoDTO.getOdontologoId());
         }
 
+        if (turnoService.existeTurno(turnoDTO.getFecha(), turnoDTO.getPacienteId(), turnoDTO.getOdontologoId())) {
+            return ResponseEntity.badRequest().body("Ya existe un turno asignado con la misma fecha, paciente y odontólogo.");
+        }
+
         TurnoDTO creado = turnoService.crearTurno(turnoDTO, paciente.get(), odontologo.get());
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
