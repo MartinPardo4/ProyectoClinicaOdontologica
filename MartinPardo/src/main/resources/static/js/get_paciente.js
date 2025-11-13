@@ -1,9 +1,11 @@
 window.addEventListener('load', () => {
     const PACIENTE_API = '/pacientes';
     const ODONTOLOGO_API = '/odontologos';
+    const TURNO_API = '/turnos';
 
     const pacienteState = new Map();
     const odontologoState = new Map();
+    const turnoState = new Map();
 
     // Pacientes - elementos
     const pacienteForm = document.getElementById('pacienteForm');
@@ -27,12 +29,26 @@ window.addEventListener('load', () => {
     const odontologoCancelEditBtn = document.getElementById('odontologoCancelEdit');
     const odontologoAlert = document.getElementById('odontologoAlert');
 
+    // Turnos - elementos
+    const turnoForm = document.getElementById('turnoForm');
+    const turnoTableBody = document.getElementById('turnoTableBody');
+    const turnoReloadBtn = document.getElementById('turnosReloadBtn');
+    const turnoFormTitle = document.getElementById('turnoFormTitle');
+    const turnoSubmitBtn = document.getElementById('turnoSubmitBtn');
+    const turnoCancelEditBtn = document.getElementById('turnoCancelEdit');
+    const turnoAlert = document.getElementById('turnoAlert');
+    const turnoFechaInput = turnoForm?.querySelector('[name="fecha"]');
+    const turnoPacienteSelect = turnoForm?.querySelector('[name="pacienteId"]');
+    const turnoOdontologoSelect = turnoForm?.querySelector('[name="odontologoId"]');
+
     inicializarTabs();
     inicializarPacientes();
     inicializarOdontologos();
+    inicializarTurnos();
 
     cargarPacientes();
     cargarOdontologos();
+    cargarTurnos();
 
     function inicializarTabs() {
         const tabsTriggerList = document.querySelectorAll('#managementTabs button[data-bs-toggle="pill"]');
@@ -122,6 +138,35 @@ window.addEventListener('load', () => {
         });
     }
 
+    function inicializarTurnos() {
+        turnoForm?.addEventListener('submit', manejarEnvioTurno);
+        turnoReloadBtn?.addEventListener('click', () => cargarTurnos(true));
+        turnoCancelEditBtn?.addEventListener('click', () => reiniciarFormularioTurnos());
+
+        turnoTableBody?.addEventListener('click', evento => {
+            const boton = evento.target.closest('button[data-action]');
+            if (!boton) {
+                return;
+            }
+
+            const accion = boton.dataset.action;
+            const id = Number(boton.dataset.id);
+
+            if (!id) {
+                return;
+            }
+
+            if (accion === 'edit') {
+                const turno = turnoState.get(id);
+                if (turno) {
+                    completarFormularioTurno(turno);
+                }
+            } else if (accion === 'delete') {
+                eliminarTurno(id);
+            }
+        });
+    }
+
     async function cargarPacientes(mostrarMensaje = false) {
         if (!pacienteTableBody) {
             return;
@@ -129,7 +174,8 @@ window.addEventListener('load', () => {
         try {
             const respuesta = await fetch(PACIENTE_API);
             if (!respuesta.ok) {
-                throw new Error('No se pudieron obtener los pacientes.');
+                const mensaje = await respuesta.text();
+                throw new Error(mensaje || 'No se pudieron obtener los pacientes.');
             }
             const data = await respuesta.json();
             const pacientes = Array.isArray(data) ? data : [];
@@ -146,22 +192,24 @@ window.addEventListener('load', () => {
                 `;
             } else {
                 pacientes.forEach(paciente => {
-                    pacienteState.set(paciente.id, paciente);
-                    const domicilio = paciente.domicilio || {};
+                    if (paciente && paciente.id != null) {
+                        pacienteState.set(Number(paciente.id), paciente);
+                    }
+                    const domicilio = paciente?.domicilio || {};
                     const fila = document.createElement('tr');
                     fila.innerHTML = `
-                        <td class="text-muted">${paciente.id ?? '-'}</td>
-                        <td>${formatearTexto(paciente.nombre)}</td>
-                        <td>${formatearTexto(paciente.apellido)}</td>
-                        <td>${paciente.email ?? '-'}</td>
-                        <td>${paciente.numeroContacto ?? '-'}</td>
-                        <td>${formatearFecha(paciente.fechaIngreso)}</td>
+                        <td class="text-muted">${paciente?.id ?? '-'}</td>
+                        <td>${formatearTexto(paciente?.nombre)}</td>
+                        <td>${formatearTexto(paciente?.apellido)}</td>
+                        <td>${paciente?.email ?? '-'}</td>
+                        <td>${paciente?.numeroContacto ?? '-'}</td>
+                        <td>${formatearFecha(paciente?.fechaIngreso)}</td>
                         <td>
                             <div class="d-flex gap-2 justify-content-end">
-                                <button class="btn btn-sm btn-outline-primary" data-action="edit" data-id="${paciente.id}">
+                                <button class="btn btn-sm btn-outline-primary" data-action="edit" data-id="${paciente?.id}">
                                     Editar
                                 </button>
-                                <button class="btn btn-sm btn-outline-danger" data-action="delete" data-id="${paciente.id}">
+                                <button class="btn btn-sm btn-outline-danger" data-action="delete" data-id="${paciente?.id}">
                                     Eliminar
                                 </button>
                             </div>
@@ -175,6 +223,8 @@ window.addEventListener('load', () => {
                     pacienteTableBody.appendChild(fila);
                 });
             }
+            actualizarOpcionesTurnoSelects();
+            renderizarTurnos();
             if (mostrarMensaje) {
                 mostrarAlerta(pacienteAlert, 'Lista de pacientes actualizada.');
             }
@@ -197,7 +247,7 @@ window.addEventListener('load', () => {
         if (!payload) {
             mostrarAlerta(pacienteAlert, 'Por favor completa los campos obligatorios.', 'warning');
             return;
-        }
+    }
 
         const esActualizacion = Boolean(id);
         const url = esActualizacion ? `${PACIENTE_API}/${id}` : PACIENTE_API;
@@ -211,7 +261,8 @@ window.addEventListener('load', () => {
             });
 
             if (!respuesta.ok) {
-                throw new Error('No se pudo guardar el paciente. Verifica los datos e intenta nuevamente.');
+                const mensaje = await respuesta.text();
+                throw new Error(mensaje || 'No se pudo guardar el paciente. Verifica los datos e intenta nuevamente.');
             }
 
             const mensaje = esActualizacion ? 'Paciente actualizado con éxito.' : 'Paciente creado con éxito.';
@@ -272,14 +323,14 @@ window.addEventListener('load', () => {
         }
 
         pacienteForm.reset();
-        pacienteForm.querySelector('[name="id"]').value = paciente.id ?? '';
-        pacienteForm.querySelector('[name="nombre"]').value = paciente.nombre ?? '';
-        pacienteForm.querySelector('[name="apellido"]').value = paciente.apellido ?? '';
-        pacienteForm.querySelector('[name="email"]').value = paciente.email ?? '';
-        pacienteForm.querySelector('[name="numeroContacto"]').value = paciente.numeroContacto ?? '';
-        pacienteForm.querySelector('[name="fechaIngreso"]').value = paciente.fechaIngreso ?? '';
+        pacienteForm.querySelector('[name="id"]').value = paciente?.id ?? '';
+        pacienteForm.querySelector('[name="nombre"]').value = paciente?.nombre ?? '';
+        pacienteForm.querySelector('[name="apellido"]').value = paciente?.apellido ?? '';
+        pacienteForm.querySelector('[name="email"]').value = paciente?.email ?? '';
+        pacienteForm.querySelector('[name="numeroContacto"]').value = paciente?.numeroContacto ?? '';
+        pacienteForm.querySelector('[name="fechaIngreso"]').value = paciente?.fechaIngreso ?? '';
 
-        const domicilio = paciente.domicilio || {};
+        const domicilio = paciente?.domicilio || {};
         pacienteForm.querySelector('[name="domicilioId"]').value = domicilio.id ?? '';
         pacienteForm.querySelector('[name="domicilioCalle"]').value = domicilio.calle ?? '';
         pacienteForm.querySelector('[name="domicilioNumero"]').value = domicilio.numero ?? '';
@@ -318,7 +369,8 @@ window.addEventListener('load', () => {
         try {
             const respuesta = await fetch(`${PACIENTE_API}/${id}`, { method: 'DELETE' });
             if (!respuesta.ok) {
-                throw new Error('No se pudo eliminar el paciente.');
+                const mensaje = await respuesta.text();
+                throw new Error(mensaje || 'No se pudo eliminar el paciente.');
             }
             mostrarAlerta(pacienteAlert, 'Paciente eliminado.');
             if (pacienteForm?.querySelector('[name="id"]').value == id) {
@@ -349,7 +401,8 @@ window.addEventListener('load', () => {
                 return;
             }
             if (!respuesta.ok) {
-                throw new Error('Ocurrió un error al buscar el paciente.');
+                const mensaje = await respuesta.text();
+                throw new Error(mensaje || 'Ocurrió un error al buscar el paciente.');
             }
             const paciente = await respuesta.json();
             completarFormularioPaciente(paciente);
@@ -367,7 +420,8 @@ window.addEventListener('load', () => {
         try {
             const respuesta = await fetch(ODONTOLOGO_API);
             if (!respuesta.ok) {
-                throw new Error('No se pudieron obtener los odontólogos.');
+                const mensaje = await respuesta.text();
+                throw new Error(mensaje || 'No se pudieron obtener los odontólogos.');
             }
             const data = await respuesta.json();
             const odontologos = Array.isArray(data) ? data : [];
@@ -384,19 +438,21 @@ window.addEventListener('load', () => {
                 `;
             } else {
                 odontologos.forEach(odontologo => {
-                    odontologoState.set(odontologo.id, odontologo);
+                    if (odontologo && odontologo.id != null) {
+                        odontologoState.set(Number(odontologo.id), odontologo);
+                    }
                     const fila = document.createElement('tr');
                     fila.innerHTML = `
-                        <td class="text-muted">${odontologo.id ?? '-'}</td>
-                        <td>${formatearTexto(odontologo.nombre)}</td>
-                        <td>${formatearTexto(odontologo.apellido)}</td>
-                        <td>${odontologo.matricula ?? '-'}</td>
+                        <td class="text-muted">${odontologo?.id ?? '-'}</td>
+                        <td>${formatearTexto(odontologo?.nombre)}</td>
+                        <td>${formatearTexto(odontologo?.apellido)}</td>
+                        <td>${odontologo?.matricula ?? '-'}</td>
                         <td>
                             <div class="d-flex gap-2 justify-content-end">
-                                <button class="btn btn-sm btn-outline-primary" data-action="edit" data-id="${odontologo.id}">
+                                <button class="btn btn-sm btn-outline-primary" data-action="edit" data-id="${odontologo?.id}">
                                     Editar
                                 </button>
-                                <button class="btn btn-sm btn-outline-danger" data-action="delete" data-id="${odontologo.id}">
+                                <button class="btn btn-sm btn-outline-danger" data-action="delete" data-id="${odontologo?.id}">
                                     Eliminar
                                 </button>
                             </div>
@@ -405,6 +461,8 @@ window.addEventListener('load', () => {
                     odontologoTableBody.appendChild(fila);
                 });
             }
+            actualizarOpcionesTurnoSelects();
+            renderizarTurnos();
             if (mostrarMensaje) {
                 mostrarAlerta(odontologoAlert, 'Lista de odontólogos actualizada.');
             }
@@ -448,7 +506,8 @@ window.addEventListener('load', () => {
             });
 
             if (!respuesta.ok) {
-                throw new Error('No se pudo guardar el odontólogo. Verifica los datos e intenta nuevamente.');
+                const mensaje = await respuesta.text();
+                throw new Error(mensaje || 'No se pudo guardar el odontólogo. Verifica los datos e intenta nuevamente.');
             }
 
             const mensaje = esActualizacion ? 'Odontólogo actualizado con éxito.' : 'Odontólogo creado con éxito.';
@@ -467,10 +526,10 @@ window.addEventListener('load', () => {
         }
 
         odontologoForm.reset();
-        odontologoForm.querySelector('[name="id"]').value = odontologo.id ?? '';
-        odontologoForm.querySelector('[name="nombre"]').value = odontologo.nombre ?? '';
-        odontologoForm.querySelector('[name="apellido"]').value = odontologo.apellido ?? '';
-        odontologoForm.querySelector('[name="matricula"]').value = odontologo.matricula ?? '';
+        odontologoForm.querySelector('[name="id"]').value = odontologo?.id ?? '';
+        odontologoForm.querySelector('[name="nombre"]').value = odontologo?.nombre ?? '';
+        odontologoForm.querySelector('[name="apellido"]').value = odontologo?.apellido ?? '';
+        odontologoForm.querySelector('[name="matricula"]').value = odontologo?.matricula ?? '';
 
         if (odontologoFormTitle) {
             odontologoFormTitle.textContent = 'Editar odontólogo';
@@ -503,7 +562,8 @@ window.addEventListener('load', () => {
         try {
             const respuesta = await fetch(`${ODONTOLOGO_API}/${id}`, { method: 'DELETE' });
             if (!respuesta.ok) {
-                throw new Error('No se pudo eliminar el odontólogo.');
+                const mensaje = await respuesta.text();
+                throw new Error(mensaje || 'No se pudo eliminar el odontólogo.');
             }
             mostrarAlerta(odontologoAlert, 'Odontólogo eliminado.');
             if (odontologoForm?.querySelector('[name="id"]').value == id) {
@@ -534,7 +594,8 @@ window.addEventListener('load', () => {
                 return;
             }
             if (!respuesta.ok) {
-                throw new Error('Ocurrió un error al buscar el odontólogo.');
+                const mensaje = await respuesta.text();
+                throw new Error(mensaje || 'Ocurrió un error al buscar el odontólogo.');
             }
             const odontologo = await respuesta.json();
             completarFormularioOdontologo(odontologo);
@@ -543,6 +604,280 @@ window.addEventListener('load', () => {
             console.error(error);
             mostrarAlerta(odontologoAlert, error.message, 'danger');
         }
+    }
+
+    async function cargarTurnos(mostrarMensaje = false) {
+        if (!turnoTableBody) {
+            return;
+        }
+        try {
+            const respuesta = await fetch(TURNO_API);
+            if (!respuesta.ok) {
+                const mensaje = await respuesta.text();
+                throw new Error(mensaje || 'No se pudieron obtener los turnos.');
+            }
+            const data = await respuesta.json();
+            const turnos = Array.isArray(data) ? data : [];
+            turnoState.clear();
+            turnos.forEach(turno => {
+                if (turno && turno.id != null) {
+                    turnoState.set(Number(turno.id), turno);
+                }
+            });
+            renderizarTurnos();
+            if (mostrarMensaje) {
+                mostrarAlerta(turnoAlert, 'Lista de turnos actualizada.');
+            }
+        } catch (error) {
+            console.error(error);
+            mostrarAlerta(turnoAlert, error.message, 'danger');
+        }
+    }
+
+    function renderizarTurnos() {
+        if (!turnoTableBody) {
+            return;
+        }
+        turnoTableBody.innerHTML = '';
+        const turnos = Array.from(turnoState.values());
+
+        if (!turnos.length) {
+            turnoTableBody.innerHTML = `
+                <tr>
+                    <td colspan="5" class="text-center text-muted py-4">
+                        No hay turnos registrados.
+                    </td>
+                </tr>
+            `;
+            return;
+        }
+
+        turnos.sort((a, b) => {
+            const fechaA = a?.fecha ? new Date(a.fecha).getTime() : 0;
+            const fechaB = b?.fecha ? new Date(b.fecha).getTime() : 0;
+            return fechaA - fechaB;
+        });
+
+        turnos.forEach(turno => {
+            const fila = document.createElement('tr');
+            fila.innerHTML = `
+                <td class="text-muted">${turno?.id ?? '-'}</td>
+                <td>${formatearFecha(turno?.fecha)}</td>
+                <td>${obtenerNombrePaciente(turno?.pacienteId)}</td>
+                <td>${obtenerNombreOdontologo(turno?.odontologoId)}</td>
+                <td>
+                    <div class="d-flex gap-2 justify-content-end">
+                        <button class="btn btn-sm btn-outline-primary" data-action="edit" data-id="${turno?.id}">
+                            Editar
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger" data-action="delete" data-id="${turno?.id}">
+                            Eliminar
+                        </button>
+                    </div>
+                </td>
+            `;
+            turnoTableBody.appendChild(fila);
+        });
+    }
+
+    function actualizarOpcionesTurnoSelects() {
+        if (!turnoPacienteSelect || !turnoOdontologoSelect) {
+            return;
+        }
+
+        const pacienteSeleccionado = turnoPacienteSelect.value;
+        const odontologoSeleccionado = turnoOdontologoSelect.value;
+
+        turnoPacienteSelect.innerHTML = '<option value="">Seleccioná un paciente</option>';
+        turnoOdontologoSelect.innerHTML = '<option value="">Seleccioná un odontólogo</option>';
+
+        const pacientesOrdenados = Array.from(pacienteState.values()).sort((a, b) => {
+            const apellidoA = (a?.apellido || '').toLowerCase();
+            const apellidoB = (b?.apellido || '').toLowerCase();
+            return apellidoA.localeCompare(apellidoB);
+        });
+
+        pacientesOrdenados.forEach(paciente => {
+            if (paciente?.id == null) {
+                return;
+            }
+            const option = document.createElement('option');
+            option.value = paciente.id;
+            option.textContent = `${formatearTexto(paciente.nombre)} ${formatearTexto(paciente.apellido)} (ID ${paciente.id})`;
+            turnoPacienteSelect.appendChild(option);
+        });
+
+        const odontologosOrdenados = Array.from(odontologoState.values()).sort((a, b) => {
+            const apellidoA = (a?.apellido || '').toLowerCase();
+            const apellidoB = (b?.apellido || '').toLowerCase();
+            return apellidoA.localeCompare(apellidoB);
+        });
+
+        odontologosOrdenados.forEach(odontologo => {
+            if (odontologo?.id == null) {
+                return;
+            }
+            const option = document.createElement('option');
+            option.value = odontologo.id;
+            option.textContent = `${formatearTexto(odontologo.nombre)} ${formatearTexto(odontologo.apellido)} (MAT ${odontologo.matricula ?? '-'})`;
+            turnoOdontologoSelect.appendChild(option);
+        });
+
+        if (pacienteSeleccionado) {
+            turnoPacienteSelect.value = pacienteSeleccionado;
+        }
+        if (odontologoSeleccionado) {
+            turnoOdontologoSelect.value = odontologoSeleccionado;
+        }
+    }
+
+    async function manejarEnvioTurno(evento) {
+        evento.preventDefault();
+        if (!turnoForm) {
+            return;
+        }
+
+        const datosFormulario = new FormData(turnoForm);
+        const id = datosFormulario.get('id');
+        const payload = construirPayloadTurno(datosFormulario);
+
+        if (!payload) {
+            mostrarAlerta(turnoAlert, 'Completá todos los campos antes de guardar el turno.', 'warning');
+            return;
+        }
+
+        const esActualizacion = Boolean(id);
+        const url = esActualizacion ? `${TURNO_API}/${id}` : TURNO_API;
+        const metodo = esActualizacion ? 'PUT' : 'POST';
+
+        try {
+            const respuesta = await fetch(url, {
+                method: metodo,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (!respuesta.ok) {
+                const mensaje = await respuesta.text();
+                throw new Error(mensaje || 'No se pudo guardar el turno. Verifica los datos e intenta nuevamente.');
+            }
+
+            const mensaje = esActualizacion ? 'Turno actualizado con éxito.' : 'Turno creado con éxito.';
+            mostrarAlerta(turnoAlert, mensaje);
+            reiniciarFormularioTurnos();
+            await cargarTurnos();
+        } catch (error) {
+            console.error(error);
+            mostrarAlerta(turnoAlert, error.message, 'danger');
+        }
+    }
+
+    function construirPayloadTurno(formData) {
+        const fecha = formData.get('fecha');
+        const pacienteId = formData.get('pacienteId');
+        const odontologoId = formData.get('odontologoId');
+
+        if (!fecha || !pacienteId || !odontologoId) {
+            return null;
+        }
+
+        const payload = {
+            fecha,
+            pacienteId: Number(pacienteId),
+            odontologoId: Number(odontologoId)
+        };
+
+        const id = formData.get('id');
+        if (id) {
+            payload.id = Number(id);
+        }
+
+        return payload;
+    }
+
+    function completarFormularioTurno(turno) {
+        if (!turnoForm) {
+            return;
+        }
+
+        turnoForm.reset();
+        turnoForm.querySelector('[name="id"]').value = turno?.id ?? '';
+        if (turnoFechaInput) {
+            turnoFechaInput.value = turno?.fecha ?? '';
+        }
+        if (turnoPacienteSelect) {
+            turnoPacienteSelect.value = turno?.pacienteId ?? '';
+        }
+        if (turnoOdontologoSelect) {
+            turnoOdontologoSelect.value = turno?.odontologoId ?? '';
+        }
+
+        if (turnoFormTitle) {
+            turnoFormTitle.textContent = 'Editar turno';
+        }
+        if (turnoSubmitBtn) {
+            turnoSubmitBtn.textContent = 'Actualizar turno';
+        }
+        turnoCancelEditBtn?.classList.remove('d-none');
+    }
+
+    function reiniciarFormularioTurnos() {
+        if (!turnoForm) {
+            return;
+        }
+        turnoForm.reset();
+        turnoForm.querySelector('[name="id"]').value = '';
+        if (turnoFormTitle) {
+            turnoFormTitle.textContent = 'Nuevo turno';
+        }
+        if (turnoSubmitBtn) {
+            turnoSubmitBtn.textContent = 'Guardar turno';
+        }
+        turnoCancelEditBtn?.classList.add('d-none');
+        actualizarOpcionesTurnoSelects();
+    }
+
+    async function eliminarTurno(id) {
+        if (!confirm('¿Estás seguro de eliminar este turno?')) {
+            return;
+        }
+        try {
+            const respuesta = await fetch(`${TURNO_API}/${id}`, { method: 'DELETE' });
+            if (!respuesta.ok) {
+                const mensaje = await respuesta.text();
+                throw new Error(mensaje || 'No se pudo eliminar el turno.');
+            }
+            mostrarAlerta(turnoAlert, 'Turno eliminado.');
+            if (turnoForm?.querySelector('[name="id"]').value == id) {
+                reiniciarFormularioTurnos();
+            }
+            await cargarTurnos();
+        } catch (error) {
+            console.error(error);
+            mostrarAlerta(turnoAlert, error.message, 'danger');
+        }
+    }
+
+    function obtenerNombrePaciente(id) {
+        if (id == null) {
+            return '-';
+        }
+        const paciente = pacienteState.get(Number(id));
+        if (!paciente) {
+            return `Paciente #${id}`;
+        }
+        return `${formatearTexto(paciente.nombre)} ${formatearTexto(paciente.apellido)} (ID ${paciente.id})`;
+    }
+
+    function obtenerNombreOdontologo(id) {
+        if (id == null) {
+            return '-';
+        }
+        const odontologo = odontologoState.get(Number(id));
+        if (!odontologo) {
+            return `Odontólogo #${id}`;
+        }
+        return `${formatearTexto(odontologo.nombre)} ${formatearTexto(odontologo.apellido)} (MAT ${odontologo.matricula ?? '-'})`;
     }
 
     function formatearTexto(valor) {
