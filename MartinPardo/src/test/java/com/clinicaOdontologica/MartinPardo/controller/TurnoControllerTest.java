@@ -11,7 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import com.clinicaOdontologica.MartinPardo.security.JwtService;
@@ -35,19 +35,19 @@ class TurnoControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
+    @MockitoBean
     private TurnoService turnoService;
 
-    @MockBean
+    @MockitoBean
     private PacienteService pacienteService;
 
-    @MockBean
+    @MockitoBean
     private OdontologoService odontologoService;
 
-    @MockBean
+    @MockitoBean
     private JwtService jwtService;
 
-    @MockBean
+    @MockitoBean
     private UsuarioService usuarioService;
 
     @Autowired
