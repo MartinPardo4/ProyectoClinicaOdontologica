@@ -32,14 +32,15 @@
 <body>
 <nav class="navbar navbar-expand-lg bg-white shadow-sm">
     <div class="container">
-        <a class="navbar-brand d-flex align-items-center" href="index.html">
+        <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
             <span>Clínica Odontológica</span>
+            <span id="sessionStatusBadge" class="badge rounded-pill bg-secondary">Sesión requerida</span>
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
-            <ul class="navbar-nav ms-auto">
+            <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
                 <li class="nav-item">
                     <a class="nav-link" aria-current="page" href="index.html">Inicio</a>
                 </li>
@@ -51,6 +52,9 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="pacienteLista.html#turnos-pane">Turnos</a>
+                </li>
+                <li class="nav-item">
+                    <button class="btn btn-link nav-link" data-action="logout">Cerrar sesión</button>
                 </li>
             </ul>
         </div>
@@ -337,6 +341,8 @@
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-<script src="/js/get_paciente.js" type="text/javascript"></script>
+<script src="js/auth.js"></script>
+<script src="js/protected.js"></script>
+<script src="js/get_paciente.js" type="text/javascript"></script>
 </body>
 </html>

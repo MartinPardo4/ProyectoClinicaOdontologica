@@ -5,6 +5,16 @@
     "description": "Colección CRUD para pacientes, odontólogos, turnos y autenticación.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{jwtToken}}",
+        "type": "string"
+      }
+    ]
+  },
   "item": [
     {
       "name": "Auth",
@@ -13,6 +23,9 @@
           "name": "Login",
           "request": {
             "method": "POST",
+            "auth": {
+              "type": "noauth"
+            },
             "header": [
               {
                 "key": "Content-Type",
@@ -34,6 +47,28 @@
               ]
             }
           },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "  try {",
+                  "    const jsonData = pm.response.json();",
+                  "    if (jsonData.token) {",
+                  "      pm.collectionVariables.set('jwtToken', jsonData.token);",
+                  "    } else {",
+                  "      pm.collectionVariables.unset('jwtToken');",
+                  "    }",
+                  "  } catch (error) {",
+                  "    pm.collectionVariables.unset('jwtToken');",
+                  "  }",
+                  "}"
+                ]
+              }
+            }
+          ],
           "response": []
         },
         {
@@ -51,6 +86,19 @@
               ]
             }
           },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "  pm.collectionVariables.unset('jwtToken');",
+                  "}"
+                ]
+              }
+            }
+          ],
           "response": []
         }
       ]
@@ -422,6 +470,10 @@
     {
       "key": "baseUrl",
       "value": "http://localhost:8080"
+    },
+    {
+      "key": "jwtToken",
+      "value": ""
     }
   ]
 }

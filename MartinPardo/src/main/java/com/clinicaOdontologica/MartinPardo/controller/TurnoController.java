@@ -1,13 +1,15 @@
 package com.clinicaOdontologica.MartinPardo.controller;
 
 import com.clinicaOdontologica.MartinPardo.dto.TurnoDTO;
+import com.clinicaOdontologica.MartinPardo.exception.ResourceNotFoundException;
+import com.clinicaOdontologica.MartinPardo.exception.TurnoConflictException;
+import com.clinicaOdontologica.MartinPardo.exception.ValidationException;
 import com.clinicaOdontologica.MartinPardo.model.Odontologo;
 import com.clinicaOdontologica.MartinPardo.model.Paciente;
 import com.clinicaOdontologica.MartinPardo.service.OdontologoService;
 import com.clinicaOdontologica.MartinPardo.service.PacienteService;
 import com.clinicaOdontologica.MartinPardo.service.TurnoService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,26 +43,21 @@ public class TurnoController {
     }
 
     @PostMapping
-    public ResponseEntity<?> crearTurno(@RequestBody TurnoDTO turnoDTO) {
-        ResponseEntity<String> validacion = validarTurnoDTO(turnoDTO);
-        if (validacion != null) {
-            return validacion;
-        }
+    public ResponseEntity<?> crearTurno(@RequestBody TurnoDTO turnoDTO) throws ValidationException, ResourceNotFoundException, TurnoConflictException {
+        validarTurnoDTO(turnoDTO);
 
         Optional<Paciente> paciente = pacienteService.buscarPacientePorId(turnoDTO.getPacienteId());
         if (paciente.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("Paciente no encontrado: " + turnoDTO.getPacienteId());
+            throw new ResourceNotFoundException("Paciente no encontrado: " + turnoDTO.getPacienteId());
         }
 
         Optional<Odontologo> odontologo = odontologoService.buscarOdontologoPorId(turnoDTO.getOdontologoId());
         if (odontologo.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("Odontólogo no encontrado: " + turnoDTO.getOdontologoId());
+            throw new ResourceNotFoundException("Odontólogo no encontrado: " + turnoDTO.getOdontologoId());
         }
 
         if (turnoService.existeTurno(turnoDTO.getFecha(), turnoDTO.getPacienteId(), turnoDTO.getOdontologoId())) {
-            return ResponseEntity.badRequest().body("Ya existe un turno asignado con la misma fecha, paciente y odontólogo.");
+            throw new TurnoConflictException("Ya existe un turno asignado con la misma fecha, paciente y odontólogo.");
         }
 
         TurnoDTO creado = turnoService.crearTurno(turnoDTO, paciente.get(), odontologo.get());
@@ -77,54 +74,48 @@ public class TurnoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TurnoDTO> buscarPorId(@PathVariable Long id) {
+    public ResponseEntity<TurnoDTO> buscarPorId(@PathVariable Long id) throws ResourceNotFoundException {
         return turnoService.buscarPorId(id)
                 .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+                .orElseThrow(() -> new ResourceNotFoundException("Turno no encontrado con ID: " + id));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> actualizarTurno(@PathVariable Long id, @RequestBody TurnoDTO turnoDTO) {
-        ResponseEntity<String> validacion = validarTurnoDTO(turnoDTO);
-        if (validacion != null) {
-            return validacion;
-        }
+    public ResponseEntity<?> actualizarTurno(@PathVariable Long id, @RequestBody TurnoDTO turnoDTO) throws ValidationException, ResourceNotFoundException {
+        validarTurnoDTO(turnoDTO);
 
         Optional<Paciente> paciente = pacienteService.buscarPacientePorId(turnoDTO.getPacienteId());
         if (paciente.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("Paciente no encontrado: " + turnoDTO.getPacienteId());
+            throw new ResourceNotFoundException("Paciente no encontrado: " + turnoDTO.getPacienteId());
         }
 
         Optional<Odontologo> odontologo = odontologoService.buscarOdontologoPorId(turnoDTO.getOdontologoId());
         if (odontologo.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("Odontólogo no encontrado: " + turnoDTO.getOdontologoId());
+            throw new ResourceNotFoundException("Odontólogo no encontrado: " + turnoDTO.getOdontologoId());
         }
 
         return turnoService.actualizarTurno(id, turnoDTO, paciente.get(), odontologo.get())
                 .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+                .orElseThrow(() -> new ResourceNotFoundException("Turno no encontrado con ID: " + id));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminarTurno(@PathVariable Long id) {
+    public ResponseEntity<Void> eliminarTurno(@PathVariable Long id) throws ResourceNotFoundException {
         if (!turnoService.eliminarTurno(id)) {
-            return ResponseEntity.notFound().build();
+            throw new ResourceNotFoundException("Turno no encontrado con ID: " + id);
         }
         return ResponseEntity.noContent().build();
     }
 
-    private ResponseEntity<String> validarTurnoDTO(TurnoDTO turnoDTO) {
+    private void validarTurnoDTO(TurnoDTO turnoDTO) throws ValidationException {
         if (turnoDTO.getFecha() == null) {
-            return ResponseEntity.badRequest().body("El campo 'fecha' es obligatorio.");
+            throw new ValidationException("El campo 'fecha' es obligatorio.");
         }
         if (turnoDTO.getPacienteId() == null) {
-            return ResponseEntity.badRequest().body("El campo 'pacienteId' es obligatorio.");
+            throw new ValidationException("El campo 'pacienteId' es obligatorio.");
         }
         if (turnoDTO.getOdontologoId() == null) {
-            return ResponseEntity.badRequest().body("El campo 'odontologoId' es obligatorio.");
+            throw new ValidationException("El campo 'odontologoId' es obligatorio.");
         }
-        return null;
     }
 }

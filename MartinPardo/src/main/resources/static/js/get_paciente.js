@@ -1,4 +1,9 @@
 window.addEventListener('load', () => {
+    if (!window.Auth) {
+        console.error('Módulo de autenticación no disponible.');
+        return;
+    }
+
     const PACIENTE_API = '/pacientes';
     const ODONTOLOGO_API = '/odontologos';
     const TURNO_API = '/turnos';
@@ -172,7 +177,7 @@ window.addEventListener('load', () => {
             return;
         }
         try {
-            const respuesta = await fetch(PACIENTE_API);
+            const respuesta = await Auth.authFetch(PACIENTE_API);
             if (!respuesta.ok) {
                 const mensaje = await respuesta.text();
                 throw new Error(mensaje || 'No se pudieron obtener los pacientes.');
@@ -254,7 +259,7 @@ window.addEventListener('load', () => {
         const metodo = esActualizacion ? 'PUT' : 'POST';
 
         try {
-            const respuesta = await fetch(url, {
+            const respuesta = await Auth.authFetch(url, {
                 method: metodo,
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
@@ -367,7 +372,7 @@ window.addEventListener('load', () => {
             return;
         }
         try {
-            const respuesta = await fetch(`${PACIENTE_API}/${id}`, { method: 'DELETE' });
+            const respuesta = await Auth.authFetch(`${PACIENTE_API}/${id}`, { method: 'DELETE' });
             if (!respuesta.ok) {
                 const mensaje = await respuesta.text();
                 throw new Error(mensaje || 'No se pudo eliminar el paciente.');
@@ -395,7 +400,7 @@ window.addEventListener('load', () => {
         }
 
         try {
-            const respuesta = await fetch(`${PACIENTE_API}/email/${encodeURIComponent(email)}`);
+            const respuesta = await Auth.authFetch(`${PACIENTE_API}/email/${encodeURIComponent(email)}`);
             if (respuesta.status === 404) {
                 mostrarAlerta(pacienteAlert, 'No se encontró un paciente con ese email.', 'warning');
                 return;
@@ -418,7 +423,7 @@ window.addEventListener('load', () => {
             return;
         }
         try {
-            const respuesta = await fetch(ODONTOLOGO_API);
+            const respuesta = await Auth.authFetch(ODONTOLOGO_API);
             if (!respuesta.ok) {
                 const mensaje = await respuesta.text();
                 throw new Error(mensaje || 'No se pudieron obtener los odontólogos.');
@@ -499,7 +504,7 @@ window.addEventListener('load', () => {
         const metodo = esActualizacion ? 'PUT' : 'POST';
 
         try {
-            const respuesta = await fetch(url, {
+            const respuesta = await Auth.authFetch(url, {
                 method: metodo,
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
@@ -560,7 +565,7 @@ window.addEventListener('load', () => {
             return;
         }
         try {
-            const respuesta = await fetch(`${ODONTOLOGO_API}/${id}`, { method: 'DELETE' });
+            const respuesta = await Auth.authFetch(`${ODONTOLOGO_API}/${id}`, { method: 'DELETE' });
             if (!respuesta.ok) {
                 const mensaje = await respuesta.text();
                 throw new Error(mensaje || 'No se pudo eliminar el odontólogo.');
@@ -588,7 +593,7 @@ window.addEventListener('load', () => {
         }
 
         try {
-            const respuesta = await fetch(`${ODONTOLOGO_API}/matricula/${encodeURIComponent(matricula)}`);
+            const respuesta = await Auth.authFetch(`${ODONTOLOGO_API}/matricula/${encodeURIComponent(matricula)}`);
             if (respuesta.status === 404) {
                 mostrarAlerta(odontologoAlert, 'No se encontró un odontólogo con esa matrícula.', 'warning');
                 return;
@@ -611,7 +616,7 @@ window.addEventListener('load', () => {
             return;
         }
         try {
-            const respuesta = await fetch(TURNO_API);
+            const respuesta = await Auth.authFetch(TURNO_API);
             if (!respuesta.ok) {
                 const mensaje = await respuesta.text();
                 throw new Error(mensaje || 'No se pudieron obtener los turnos.');
@@ -751,7 +756,7 @@ window.addEventListener('load', () => {
         const metodo = esActualizacion ? 'PUT' : 'POST';
 
         try {
-            const respuesta = await fetch(url, {
+            const respuesta = await Auth.authFetch(url, {
                 method: metodo,
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
@@ -842,7 +847,7 @@ window.addEventListener('load', () => {
             return;
         }
         try {
-            const respuesta = await fetch(`${TURNO_API}/${id}`, { method: 'DELETE' });
+            const respuesta = await Auth.authFetch(`${TURNO_API}/${id}`, { method: 'DELETE' });
             if (!respuesta.ok) {
                 const mensaje = await respuesta.text();
                 throw new Error(mensaje || 'No se pudo eliminar el turno.');
