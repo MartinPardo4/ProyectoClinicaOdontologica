@@ -41,9 +41,18 @@
 
         const response = await fetch(resource, fetchOptions);
 
-        if (response.status === 401 || response.status === 403) {
+        // Solo limpiar token si realmente es un error de autenticación
+        // No limpiar en respuestas exitosas (200, 201, 204, etc.)
+        if (response.status === 401) {
             clearToken();
             throw new Error('Sesión expirada. Por favor inicia sesión nuevamente.');
+        }
+        
+        // 403 puede ser por falta de permisos, no necesariamente sesión expirada
+        // Solo limpiar si no hay token o si el token parece inválido
+        if (response.status === 403 && !token) {
+            clearToken();
+            throw new Error('No autorizado. Por favor inicia sesión.');
         }
 
         return response;

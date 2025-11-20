@@ -374,10 +374,19 @@ window.addEventListener('load', () => {
         try {
             const respuesta = await Auth.authFetch(`${PACIENTE_API}/${id}`, { method: 'DELETE' });
             if (!respuesta.ok) {
-                const mensaje = await respuesta.text();
-                throw new Error(mensaje || 'No se pudo eliminar el paciente.');
+                let mensaje = 'No se pudo eliminar el paciente.';
+                try {
+                    const texto = await respuesta.text();
+                    if (texto) {
+                        mensaje = texto;
+                    }
+                } catch (e) {
+                    // Ignorar error al leer el body
+                }
+                throw new Error(mensaje);
             }
-            mostrarAlerta(pacienteAlert, 'Paciente eliminado.');
+            // 204 No Content es una respuesta exitosa sin body
+            mostrarAlerta(pacienteAlert, 'Paciente eliminado.', 'success');
             if (pacienteForm?.querySelector('[name="id"]').value == id) {
                 reiniciarFormularioPacientes();
             }
@@ -567,10 +576,19 @@ window.addEventListener('load', () => {
         try {
             const respuesta = await Auth.authFetch(`${ODONTOLOGO_API}/${id}`, { method: 'DELETE' });
             if (!respuesta.ok) {
-                const mensaje = await respuesta.text();
-                throw new Error(mensaje || 'No se pudo eliminar el odontólogo.');
+                let mensaje = 'No se pudo eliminar el odontólogo.';
+                try {
+                    const texto = await respuesta.text();
+                    if (texto) {
+                        mensaje = texto;
+                    }
+                } catch (e) {
+                    // Ignorar error al leer el body
+                }
+                throw new Error(mensaje);
             }
-            mostrarAlerta(odontologoAlert, 'Odontólogo eliminado.');
+            // 204 No Content es una respuesta exitosa sin body
+            mostrarAlerta(odontologoAlert, 'Odontólogo eliminado.', 'success');
             if (odontologoForm?.querySelector('[name="id"]').value == id) {
                 reiniciarFormularioOdontologos();
             }
@@ -849,10 +867,19 @@ window.addEventListener('load', () => {
         try {
             const respuesta = await Auth.authFetch(`${TURNO_API}/${id}`, { method: 'DELETE' });
             if (!respuesta.ok) {
-                const mensaje = await respuesta.text();
-                throw new Error(mensaje || 'No se pudo eliminar el turno.');
+                let mensaje = 'No se pudo eliminar el turno.';
+                try {
+                    const texto = await respuesta.text();
+                    if (texto) {
+                        mensaje = texto;
+                    }
+                } catch (e) {
+                    // Ignorar error al leer el body
+                }
+                throw new Error(mensaje);
             }
-            mostrarAlerta(turnoAlert, 'Turno eliminado.');
+            // 204 No Content es una respuesta exitosa sin body
+            mostrarAlerta(turnoAlert, 'Turno eliminado.', 'success');
             if (turnoForm?.querySelector('[name="id"]').value == id) {
                 reiniciarFormularioTurnos();
             }

@@ -40,17 +40,24 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try {
             username = jwtService.extractUsername(token);
         } catch (Exception ex) {
+            // Token inválido o malformado - dejar que Spring Security maneje la autenticación
             filterChain.doFilter(request, response);
             return;
         }
 
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = usuarioService.loadUserByUsername(username);
-            if (jwtService.isTokenValid(token, userDetails)) {
-                UsernamePasswordAuthenticationToken authenticationToken =
-                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+        if (username != null) {
+            try {
+                UserDetails userDetails = usuarioService.loadUserByUsername(username);
+                if (jwtService.isTokenValid(token, userDetails)) {
+                    // Token válido - establecer autenticación
+                    UsernamePasswordAuthenticationToken authenticationToken =
+                            new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                    authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                }
+                // Si el token no es válido, no establecer autenticación y dejar que Spring Security maneje
+            } catch (org.springframework.security.core.userdetails.UsernameNotFoundException ex) {
+                // Usuario no encontrado - dejar que Spring Security maneje
             }
         }
 
